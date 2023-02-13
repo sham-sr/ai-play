@@ -105,7 +105,7 @@ def sent_to_ai(in_text,model,temperature,max_tokens,top_p,best_of,frequency_pena
                         best_of =best_of,
                         frequency_penalty=frequency_penalty,
                         presence_penalty=presence_penalty,
-                        kep_first=kep_first) 
+                        kep_first=kep_first)['text'] 
     except:
         ai_out = 'Ошибка ответа AI'   
     st.session_state['ai_out']=ai_out
