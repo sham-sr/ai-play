@@ -85,15 +85,21 @@ with inp:
         in_text = st_ace(value=st.session_state['ext_input'], auto_update=True, language=select_lang)
     else:
         in_text = st_ace(placeholder=INPUT_HELP_TEXT, auto_update=True, language=select_lang)
+    instruct = st.text_input('Инструкции:', help=None, key='st.instruct')
 
-def sent_to_ai(in_text,model,temperature,max_tokens,top_p,best_of,frequency_penalty,presence_penalty,kep_first):
+def sent_to_ai(in_text,instruct,model,temperature,max_tokens,top_p,best_of,frequency_penalty,presence_penalty,kep_first):
     try:
         eng_in_text = ya_translate(in_text,target_language='en')
         st.session_state['eng_in_text']  = eng_in_text
     except:
         eng_in_text = 'Ошибка автоперевода на en'
         st.session_state['eng_in_text'] = eng_in_text
-    if  eng_in_text != 'Ошибка автоперевода на en':
+    try:
+        instruct_eng = ya_translate(instruct,target_language='en')
+    except:
+        instruct_eng = ''
+    eng_in_text = f'{eng_in_text}\n{instruct_eng}'
+    if  eng_in_text != 'Ошибка автоперевода на en' or eng_in_text != f'Ошибка автоперевода на en\n{instruct_eng}':
         try:
             ai_out = ai_answers(os.getenv("ORGANIZATION"),
                             os.getenv("OPENAI_API_KEY"),
@@ -111,6 +117,7 @@ def sent_to_ai(in_text,model,temperature,max_tokens,top_p,best_of,frequency_pena
     else:
         ai_out = eng_in_text
     st.session_state['ai_out']=ai_out
+    st.session_state['instruct']=''
 
 
 if 'ai_out' not in st.session_state:
@@ -119,11 +126,11 @@ if 'ai_out' not in st.session_state:
 with out:
     if out_lang !='en':
         try:
-            st_ace(value=''+ya_translate(st.session_state['ai_out'],target_language=out_lang), language=select_lang)
+            st_ace(value=''+ya_translate(st.session_state['ai_out'],target_language=out_lang), auto_update=True, language=select_lang)
         except:
-            st_ace(value=f'Ошибка перевода на {out_lang}', language=select_lang)
+            st_ace(value=f'Ошибка перевода на {out_lang}', language=select_lang, auto_update=True)
     else:    
-        st_ace(value=''+st.session_state['ai_out'], language=select_lang)
+        st_ace(value=''+st.session_state['ai_out'], language=select_lang, auto_update=True)
 
 
 
@@ -136,6 +143,7 @@ s23.button('<',help='Вставиь ответ ИИ. Можно использо
              on_click=copy_out,args=(st.session_state['ai_out'],))
 #st.write(f'Вероятный язык ввода:{guess_lexer(in_text).name}')    
 st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in_text,
+                                                                   instruct
                                                                    model,
                                                                    temperature,
                                                                    max_tokens,
