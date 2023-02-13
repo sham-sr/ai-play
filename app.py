@@ -31,8 +31,10 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 def update_state():
-    del st.session_state['ext_input']
-    del st.session_state['final_out']
+    if 'ext_input' in st.session_state:
+        del st.session_state['ext_input']
+    if 'final_out' in st.session_state:
+        del st.session_state['final_out']
 
 
 snippets_dict = snippets_dict_get(app_path+'/snippets.txt')
@@ -152,11 +154,16 @@ if s21.button('Clear',help='Очистить все'):
     with out:
         tab1.write()
         tab2.write()
-    #del st.session_state['st.st_ace']
-    del st.session_state['st.snipets']
-    del st.session_state['st.upload_file']
-    del st.session_state['st.max_tokens']
-    del st.session_state['st.p_lang']
+    if 'ai_out' in st.session_state:
+        del st.session_state['ai_out']
+    if 'st.snipets' in st.session_state:
+        del st.session_state['st.snipets']
+    if 'st.upload_file' in st.session_state:
+        del st.session_state['st.upload_file']
+    if 'st.max_tokens' in st.session_state:
+        del st.session_state['st.max_tokens']
+    if 'st.p_lang' in st.session_state:
+        del st.session_state['st.p_lang']
     st.experimental_rerun()
         
 
