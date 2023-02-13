@@ -160,7 +160,7 @@ with out:
 st.write('output_ace')
 st.write(st.session_state['out_ace'])
 st.write('final')
-if 'final_out' st.session_state:
+if 'final_out' in st.session_state:
     st.write(st.session_state['final_out'])
 
 
