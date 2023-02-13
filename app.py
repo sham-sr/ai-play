@@ -39,7 +39,10 @@ def update_state():
 
 snippets_dict = snippets_dict_get(app_path+'/snippets.txt')
 s11,s12 = st.columns([1,1])
-select_snippets = s11.selectbox('Snippets',['']+list(snippets_dict.keys()), index=0,format_func = snippets_dict.get, on_change=update_state)
+select_snippets = s11.selectbox('Snippets',['']+list(snippets_dict.keys()),
+                                 index=0,
+                                 format_func = snippets_dict.get,
+                                 on_change=update_state)
 uploaded_files = s12.file_uploader('Upload file', type=FILE_TYPES_LIST, on_change=update_state)
 uploaded_text = read_up_file(uploaded_files,ftype='string_data')
 
@@ -84,9 +87,16 @@ select_lang = s25.selectbox('Язык программирования', ['text'
 inp,out = st.columns([1,1])
 with inp:
     if st.session_state['ext_input'] is not None: 
-        in_text = st_ace(value=st.session_state['ext_input'], auto_update=True, language=select_lang)
+        in_value = st.session_state['ext_input']
+        in_placeholder = None
     else:
-        in_text = st_ace(placeholder=INPUT_HELP_TEXT, auto_update=True, language=select_lang)
+        in_value = ''
+        in_placeholder = INPUT_HELP_TEXT
+    in_text = st_ace(value=in_value,
+                     placeholder=in_placeholder,
+                     auto_update=True,
+                     language=select_lang
+                     key='in_ace')
     instruct = st.text_input('Инструкции:', help=None, key='st.instruct')
 
 def sent_to_ai(in_text,instruct,model,temperature,max_tokens,top_p,best_of,frequency_penalty,presence_penalty,kep_first):
@@ -128,11 +138,12 @@ if 'ai_out' not in st.session_state:
 with out:
     if out_lang !='en':
         try:
-            st_ace(value=''+ya_translate(st.session_state['ai_out'],target_language=out_lang), auto_update=True, language=select_lang)
+            out_value = ''+ya_translate(st.session_state['ai_out'],target_language=out_lang)
         except:
-            st_ace(value=f'Ошибка перевода на {out_lang}', language=select_lang, auto_update=True)
+            out_value =f'Ошибка перевода на {out_lang}'
     else:    
-        st_ace(value=''+st.session_state['ai_out'], language=select_lang, auto_update=True)
+        out_value =''+st.session_state['ai_out']
+    st_ace(value=out_value, auto_update=True, language=select_lang, key='out_ace')
 
 
 
