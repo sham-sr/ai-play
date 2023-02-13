@@ -37,8 +37,8 @@ def update_state():
 
 snippets_dict = snippets_dict_get(app_path+'/snippets.txt')
 s11,s12 = st.columns([1,1])
-select_snippets = s11.selectbox('Snippets',['']+list(snippets_dict.keys()), index=0,format_func = snippets_dict.get, on_change=update_state)
-uploaded_files = s12.file_uploader('Upload file', type=FILE_TYPES_LIST, on_change=update_state)
+select_snippets = s11.selectbox('Snippets',['']+list(snippets_dict.keys()), index=0,format_func = snippets_dict.get, on_change=update_state, key='st.snipets')
+uploaded_files = s12.file_uploader('Upload file', type=FILE_TYPES_LIST, on_change=update_state,key='st.upload_file')
 uploaded_text = read_up_file(uploaded_files,ftype='string_data')
 
 
@@ -64,7 +64,7 @@ with st.sidebar:
         pre_max = 128
         pre_temp = 0.05
     temperature = st.slider('Температура:', min_value=0.0, max_value=1.0, value=pre_temp,step=0.01,help=help_dict('temperature'))
-    max_tokens = st.slider('Max токенов:', min_value=1, max_value=2048, value=pre_max,step=1,help=help_dict('max_tokens'))
+    max_tokens = st.slider('Max токенов:', min_value=1, max_value=2048, value=pre_max,step=1,help=help_dict('max_tokens'), key='st.max_tokens')
     top_p = st.slider('Top P:', min_value=0.0, max_value=1.0, value=1.0,step=0.1,help=help_dict('top_p'))
     frequency_penalty = st.slider('Frequency penalty:', min_value=0.0, max_value=2.0, value=0.0,step=0.01,help=help_dict('frequency_penalty'))
     presence_penalty = st.slider('Presence penalty:', min_value=0.0, max_value=2.0, value=0.0,step=0.01,help=help_dict('presence_penalty'))
@@ -74,19 +74,15 @@ with st.sidebar:
 s21,s22,s23,s24,s25 = st.columns([.5,3.1,.4,2,2])
 s21.markdown('## ')
 
-
-
-if s21.button('Clear',help='Очистить все'):
-    st.experimental_rerun()
 s23.markdown('## ')
-out_lang = s24.radio('Язык вывода', ['en','ru'], horizontal=True)
+out_lang = s24.radio('Язык вывода', ['en','ru'], horizontal=True, key ='st.p_lang')
 select_lang = s25.selectbox('Язык программирования', ['text']+LANGUAGES_SMALL) 
     
 inp,out = st.columns([1,1])
 with inp:
     st.markdown('# ')
     if st.session_state['ext_input'] is not None: 
-        in_text = st_ace(value=st.session_state['ext_input'], auto_update=True, language=select_lang)
+        in_text = st_ace(value=st.session_state['ext_input'], auto_update=True, language=select_lang, key='st.st_ace')
     else:
         in_text = st_ace(placeholder=INPUT_HELP_TEXT, auto_update=True, language=select_lang)
 
@@ -151,7 +147,19 @@ st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in
                                                                    presence_penalty,
                                                                    True)) 
 
+
+if s21.button('Clear',help='Очистить все'):
+    with out:
+        tab1.write()
+        tab2.write()
+    del st.session_state['st.st_ace']
+    del st.session_state['st.snipets']
+    del st.session_state['st.upload_file']
+    del st.session_state['st.max_tokens']
+    del st.session_state['st.p_lang']
+    st.experimental_rerun()
         
+
 with st.expander('Инструкции по OpenAI', expanded=False):
     with open(app_path+'/help.md','r') as f:
         help_text = f.read()
