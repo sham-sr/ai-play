@@ -90,11 +90,12 @@ with inp:
 def sent_to_ai(in_text,model,temperature,max_tokens,top_p,best_of,frequency_penalty,presence_penalty,kep_first):
     try:
         eng_in_text = ya_translate(in_text,target_language='en')
+        st.session_state['eng_in_text']  = eng_in_text
     except:
         eng_in_text = 'Ошибка автоперевода на en'
+        st.session_state['eng_in_text'] = eng_in_text
     if  eng_in_text != 'Ошибка автоперевода на en':
         try:
-            st.write(eng_in_text)
             ai_out = ai_answers(os.getenv("ORGANIZATION"),
                             os.getenv("OPENAI_API_KEY"),
                             prompt=eng_in_text,
@@ -111,6 +112,9 @@ def sent_to_ai(in_text,model,temperature,max_tokens,top_p,best_of,frequency_pena
     else:
         ai_out = eng_in_text
     st.session_state['ai_out']=ai_out
+
+if 'eng_in_text' in st.session_state:
+    st.write(st.session_state['eng_in_text'])
 
 if 'ai_out' not in st.session_state:
     st.session_state['ai_out']=''
