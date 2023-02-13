@@ -81,7 +81,6 @@ select_lang = s25.selectbox('Язык программирования', ['text'
     
 inp,out = st.columns([1,1])
 with inp:
-    st.markdown('## ')
     if st.session_state['ext_input'] is not None: 
         in_text = st_ace(value=st.session_state['ext_input'], auto_update=True, language=select_lang)
     else:
@@ -113,30 +112,19 @@ def sent_to_ai(in_text,model,temperature,max_tokens,top_p,best_of,frequency_pena
         ai_out = eng_in_text
     st.session_state['ai_out']=ai_out
 
-if 'eng_in_text' in st.session_state:
-    st.write(st.session_state['eng_in_text'])
 
 if 'ai_out' not in st.session_state:
     st.session_state['ai_out']=''
 
 with out:
-    tab1, tab2 = st.tabs(["Code", "Text"])
-    with tab1:
-        if out_lang !='en':
-            try:
-                st.code(''+ya_translate(st.session_state['ai_out'],target_language=out_lang), language=select_lang)
-            except:
-                st.code(f'Ошибка перевода на {out_lang}', language=select_lang)
-        else:    
-            st.code(''+st.session_state['ai_out'], language=select_lang)
-    with tab2:
-        if out_lang !='en':
-            try:
-                st.text(''+ya_translate(st.session_state['ai_out'],target_language=out_lang))
-            except:
-                st.text(f'Ошибка перевода на {out_lang}')
-        else:    
-            st.text(''+st.session_state['ai_out'])
+    if out_lang !='en':
+        try:
+            st_ace(value=''+ya_translate(st.session_state['ai_out'],target_language=out_lang), language=select_lang)
+        except:
+            st_ace(value=f'Ошибка перевода на {out_lang}', language=select_lang)
+    else:    
+        st_ace(value=''+st.session_state['ai_out'], language=select_lang)
+
 
 
 def copy_out(final_out):
