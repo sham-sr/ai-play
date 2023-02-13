@@ -46,6 +46,9 @@ select_snippets = s11.selectbox('Snippets',['']+list(snippets_dict.keys()),
 uploaded_files = s12.file_uploader('Upload file', type=FILE_TYPES_LIST, on_change=update_state)
 uploaded_text = read_up_file(uploaded_files,ftype='string_data')
 
+# очистка вывода
+if 'ai_out' not in st.session_state:
+    st.session_state['ai_out']=''
 
 # перелючаю между снипетами и загрузкой файлов
 if 'final_out' not in st.session_state:
@@ -135,6 +138,10 @@ if 'ai_out' not in st.session_state:
     st.session_state['ai_out']=''
 
 with out:
+    st_ace(value=''+st.session_state['ai_out'],
+                   auto_update=True,
+                   language=select_lang,
+                   key='out_ace')
     if out_lang !='en':
         try:
             st_ace(value=''+ya_translate(st.session_state['ai_out'],target_language=out_lang),
@@ -149,6 +156,12 @@ with out:
                    auto_update=True,
                    language=select_lang,
                    key='out_ace')
+
+st.write('output_ace')
+st.write(st.session_state['out_ace'])
+st.write('final')
+if 'final_out' st.session_state:
+    st.write(st.session_state['final_out'])
 
 
 def copy_out(final_out):
