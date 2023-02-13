@@ -152,7 +152,7 @@ if s21.button('Clear',help='Очистить все'):
     with out:
         tab1.write()
         tab2.write()
-    del st.session_state['st.st_ace']
+    #del st.session_state['st.st_ace']
     del st.session_state['st.snipets']
     del st.session_state['st.upload_file']
     del st.session_state['st.max_tokens']
