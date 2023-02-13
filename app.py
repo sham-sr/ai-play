@@ -33,7 +33,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 def update_state():
     del st.session_state['ext_input']
     del st.session_state['final_out']
-    if 'st.instruct' in st.session_state
+    if 'st.instruct' in st.session_state:
         st.session_state['st.instruct']=''
 
 
