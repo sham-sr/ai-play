@@ -141,7 +141,14 @@ def copy_out(final_out):
 s23.button('<',help='Вставиь ответ ИИ. Можно использовать для итеративного програмиирования',
              on_click=copy_out,args=(st.session_state['ai_out'],))
 #st.write(f'Вероятный язык ввода:{guess_lexer(in_text).name}')    
-st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in_text,)) 
+st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in_text,
+                                                                   model,
+                                                                   temperature,
+                                                                   max_tokens,
+                                                                   top_p,best_of,
+                                                                   frequency_penalty,
+                                                                   presence_penalty,
+                                                                   True)) 
 
         
 with st.expander('Инструкции по OpenAI', expanded=False):
