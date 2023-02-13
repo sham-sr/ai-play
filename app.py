@@ -94,6 +94,7 @@ def sent_to_ai(in_text,model,temperature,max_tokens,top_p,best_of,frequency_pena
         eng_in_text = 'Ошибка автоперевода на en'
     if  eng_in_text != 'Ошибка автоперевода на en':
         try:
+            st.write(eng_in_text)
             ai_out = ai_answers(os.getenv("ORGANIZATION"),
                             os.getenv("OPENAI_API_KEY"),
                             prompt=eng_in_text,
