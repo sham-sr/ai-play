@@ -71,9 +71,9 @@ with st.sidebar:
     best_of = st.slider('Best of:', min_value=1, max_value=3, value=1,step=1,help=help_dict('best_of'))
     st.checkbox('Использовать ответ ИИ', value=False)
 
-s21,s22,s23,s24,s25 = st.columns([.5,3.1,.4,2,2])
+s21,s22,s23,s24,s25 = st.columns([1.5,2.1,.4,2,2])
 s21.markdown('## ')
-s21.markdown('*F5* сбросить всё')
+s21.markdown('**F5** сбросить всё')
 
 s23.markdown('## ')
 out_lang = s24.radio('Язык вывода', ['en','ru'], horizontal=True, key ='st.p_lang')
