@@ -86,7 +86,7 @@ select_lang = s25.selectbox('Язык программирования', ['text'
     
 inp,out = st.columns([1,1])
 with inp:
-    st.wtite(st.session_state['ext_input'])
+    st.write(st.session_state['ext_input'])
     if st.session_state['ext_input'] is not None:
         st.write() 
         in_value = st.session_state['ext_input']
