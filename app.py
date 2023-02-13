@@ -155,7 +155,7 @@ with out:
         st_ace(value=''+st.session_state['ai_out'],
                    auto_update=True,
                    language=select_lang,
-                   key='out_ace')
+                   key='out_ace2')
 
 st.write('output_ace')
 st.write(st.session_state['out_ace'])
