@@ -68,7 +68,7 @@ with st.sidebar:
     top_p = st.slider('Top P:', min_value=0.0, max_value=1.0, value=1.0,step=0.1,help=help_dict('top_p'))
     frequency_penalty = st.slider('Frequency penalty:', min_value=0.0, max_value=2.0, value=0.0,step=0.01,help=help_dict('frequency_penalty'))
     presence_penalty = st.slider('Presence penalty:', min_value=0.0, max_value=2.0, value=0.0,step=0.01,help=help_dict('presence_penalty'))
-    best_of = st.slider('Best of:', min_value=1, max_value=20, value=1,step=1,help=help_dict('best_of'))
+    best_of = st.slider('Best of:', min_value=1, max_value=3, value=1,step=1,help=help_dict('best_of'))
     st.checkbox('Использовать ответ ИИ', value=False)
 
 s21,s22,s23,s24,s25 = st.columns([.5,3.1,.4,2,2])
@@ -76,7 +76,8 @@ s21.markdown('## ')
 
 
 
-s21.button('Clear',help='Очистить все')
+if s21.button('Clear',help='Очистить все'):
+    st.experimental_rerun()
 s23.markdown('## ')
 out_lang = s24.radio('Язык вывода', ['en','ru'], horizontal=True)
 select_lang = s25.selectbox('Язык программирования', ['text']+LANGUAGES_SMALL) 
@@ -152,4 +153,4 @@ st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in
 
         
 with st.expander('Инструкции по OpenAI', expanded=False):
-    st.components.v1.iframe('https://platform.openai.com/docs/introduction', width=None, height=None, scrolling=False)
+    st.markdown(read_up_file(app_path+'/help.md',ftype='sstring_data'))
