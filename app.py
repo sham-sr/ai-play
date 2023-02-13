@@ -37,8 +37,8 @@ def update_state():
 
 snippets_dict = snippets_dict_get(app_path+'/snippets.txt')
 s11,s12 = st.columns([1,1])
-select_snippets = s11.selectbox('Snippets',['']+list(snippets_dict.keys()), index=0,format_func = snippets_dict.get, on_change=update_state, key='st.snipets')
-uploaded_files = s12.file_uploader('Upload file', type=FILE_TYPES_LIST, on_change=update_state,key='st.upload_file')
+select_snippets = s11.selectbox('Snippets',['']+list(snippets_dict.keys()), index=0,format_func = snippets_dict.get, on_change=update_state)
+uploaded_files = s12.file_uploader('Upload file', type=FILE_TYPES_LIST, on_change=update_state)
 uploaded_text = read_up_file(uploaded_files,ftype='string_data')
 
 
@@ -64,7 +64,7 @@ with st.sidebar:
         pre_max = 128
         pre_temp = 0.05
     temperature = st.slider('Температура:', min_value=0.0, max_value=1.0, value=pre_temp,step=0.01,help=help_dict('temperature'))
-    max_tokens = st.slider('Max токенов:', min_value=1, max_value=2048, value=pre_max,step=1,help=help_dict('max_tokens'), key='st.max_tokens')
+    max_tokens = st.slider('Max токенов:', min_value=1, max_value=2048, value=pre_max,step=1,help=help_dict('max_tokens'))
     top_p = st.slider('Top P:', min_value=0.0, max_value=1.0, value=1.0,step=0.1,help=help_dict('top_p'))
     frequency_penalty = st.slider('Frequency penalty:', min_value=0.0, max_value=2.0, value=0.0,step=0.01,help=help_dict('frequency_penalty'))
     presence_penalty = st.slider('Presence penalty:', min_value=0.0, max_value=2.0, value=0.0,step=0.01,help=help_dict('presence_penalty'))
@@ -82,7 +82,7 @@ inp,out = st.columns([1,1])
 with inp:
     st.markdown('F5 сбросить всё')
     if st.session_state['ext_input'] is not None: 
-        in_text = st_ace(value=st.session_state['ext_input'], auto_update=True, language=select_lang, key='st.st_ace')
+        in_text = st_ace(value=st.session_state['ext_input'], auto_update=True, language=select_lang)
     else:
         in_text = st_ace(placeholder=INPUT_HELP_TEXT, auto_update=True, language=select_lang)
 
@@ -150,10 +150,11 @@ st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in
 
 if s21.button('Clear',help='Очистить все'):
     if 'ai_out' in st.session_state:
-        del st.session_state['ai_out']
+        del st.session_state['final_out']
+    if 'final_out' in st.session_state:
+        del st.session_state['final_out']
     if 'ext_input' in st.session_state:
         del st.session_state['ext_input']
-    st.experimental_rerun()
         
 
 with st.expander('Инструкции по OpenAI', expanded=False):
