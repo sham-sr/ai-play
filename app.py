@@ -91,28 +91,29 @@ def sent_to_ai(in_text,model,temperature,max_tokens,top_p,best_of,frequency_pena
     try:
         eng_in_text = ya_translate(in_text,target_language='en')
     except:
-        ai_out = 'Ошибка автоперевода на en' 
-    try:
-        ai_out = ai_answers(os.getenv("ORGANIZATION"),
-                        os.getenv("OPENAI_API_KEY"),
-                        prompt=eng_in_text,
-                        model=model,              
-                        temperature=temperature,
-                        max_tokens=max_tokens,
-                        top_p=top_p,
-                        best_of =best_of,
-                        frequency_penalty=frequency_penalty,
-                        presence_penalty=presence_penalty,
-                        kep_first=kep_first)['text'] 
-    except:
-        ai_out = 'Ошибка ответа AI'   
-    st.session_state['ai_out']=ai_out
+        ai_out = 'Ошибка автоперевода на en'
+    if  ai_out != 'Ошибка автоперевода на en':
+        try:
+            ai_out = ai_answers(os.getenv("ORGANIZATION"),
+                            os.getenv("OPENAI_API_KEY"),
+                            prompt=eng_in_text,
+                            model=model,              
+                            temperature=temperature,
+                            max_tokens=max_tokens,
+                            top_p=top_p,
+                            best_of =best_of,
+                            frequency_penalty=frequency_penalty,
+                            presence_penalty=presence_penalty,
+                            kep_first=kep_first)['text'] 
+        except:
+            ai_out = 'Ошибка ответа AI'   
+        st.session_state['ai_out']=ai_out
 
 if 'ai_out' not in st.session_state:
     st.session_state['ai_out']=''
 
 with out:
-    tab1, tab2 = st.tabs(["Code", "Markdown"])
+    tab1, tab2 = st.tabs(["Code", "Text"])
     with tab1:
         if out_lang !='en':
             try:
@@ -124,11 +125,11 @@ with out:
     with tab2:
         if out_lang !='en':
             try:
-                st.markdown(''+ya_translate(st.session_state['ai_out'],target_language=out_lang))
+                st.text(''+ya_translate(st.session_state['ai_out'],target_language=out_lang))
             except:
-                st.markdown(f'Ошибка перевода на {out_lang}')
+                st.text(f'Ошибка перевода на {out_lang}')
         else:    
-            st.markdown(''+st.session_state['ai_out'])
+            st.text(''+st.session_state['ai_out'])
 
 
 def copy_out(final_out):
