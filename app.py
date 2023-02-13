@@ -33,22 +33,14 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 def update_state():
     del st.session_state['ext_input']
     del st.session_state['final_out']
-    if 'st.instruct' in st.session_state:
-        st.session_state['st.instruct']=''
 
 
 snippets_dict = snippets_dict_get(app_path+'/snippets.txt')
 s11,s12 = st.columns([1,1])
-select_snippets = s11.selectbox('Snippets',['']+list(snippets_dict.keys()),
-                                 index=0,
-                                 format_func = snippets_dict.get,
-                                 on_change=update_state)
+select_snippets = s11.selectbox('Snippets',['']+list(snippets_dict.keys()), index=0,format_func = snippets_dict.get, on_change=update_state)
 uploaded_files = s12.file_uploader('Upload file', type=FILE_TYPES_LIST, on_change=update_state)
 uploaded_text = read_up_file(uploaded_files,ftype='string_data')
 
-# очи
-if 'ai_out' not in st.session_state:
-    st.session_state['ai_out']=''
 
 # перелючаю между снипетами и загрузкой файлов
 if 'final_out' not in st.session_state:
@@ -89,87 +81,65 @@ select_lang = s25.selectbox('Язык программирования', ['text'
     
 inp,out = st.columns([1,1])
 with inp:
-    if st.session_state['ext_input'] is not None or st.session_state['ext_input'] !='':
-        in_text = st_ace(value=st.session_state['ext_input'],
-                        placeholder='',
-                        auto_update=True,
-                        language=select_lang)
+    st.markdown('## ')
+    if st.session_state['ext_input'] is not None: 
+        in_text = st_ace(value=st.session_state['ext_input'], auto_update=True, language=select_lang)
     else:
-        in_text = st_ace(value='',
-                        placeholder=INPUT_HELP_TEXT,
-                        auto_update=True,
-                        language=select_lang)
-    instruct = st.text_input('Инструкции:', help=None, key='st.instruct')
+        in_text = st_ace(placeholder=INPUT_HELP_TEXT, auto_update=True, language=select_lang)
 
-def sent_to_ai(in_text,instruct,model,temperature,max_tokens,top_p,best_of,frequency_penalty,presence_penalty,kep_first):
+def sent_to_ai(in_text,model,temperature,max_tokens,top_p,best_of,frequency_penalty,presence_penalty,kep_first):
     try:
         eng_in_text = ya_translate(in_text,target_language='en')
-        st.session_state['eng_in_text']  = eng_in_text
     except:
-        eng_in_text = 'Ошибка автоперевода на en'
-        st.session_state['eng_in_text'] = eng_in_text
+        ai_out = 'Ошибка автоперевода на en' 
     try:
-        instruct_eng = ya_translate(instruct,target_language='en')
+        ai_out = ai_answers(os.getenv("ORGANIZATION"),
+                        os.getenv("OPENAI_API_KEY"),
+                        prompt=eng_in_text,
+                        model=model,              
+                        temperature=temperature,
+                        max_tokens=max_tokens,
+                        top_p=top_p,
+                        best_of =best_of,
+                        frequency_penalty=frequency_penalty,
+                        presence_penalty=presence_penalty,
+                        kep_first=kep_first)['text'] 
     except:
-        instruct_eng = ''
-    eng_in_text = f'{eng_in_text}\n{instruct_eng}'
-    if  eng_in_text != 'Ошибка автоперевода на en' or eng_in_text != f'Ошибка автоперевода на en\n{instruct_eng}':
-        try:
-            ai_out = ai_answers(os.getenv("ORGANIZATION"),
-                            os.getenv("OPENAI_API_KEY"),
-                            prompt=eng_in_text,
-                            model=model,              
-                            temperature=temperature,
-                            max_tokens=max_tokens,
-                            top_p=top_p,
-                            best_of =best_of,
-                            frequency_penalty=frequency_penalty,
-                            presence_penalty=presence_penalty,
-                            kep_first=kep_first)['text'] 
-        except:
-            ai_out = 'Ошибка ответа AI'
-    else:
-        ai_out = eng_in_text
+        ai_out = 'Ошибка ответа AI'   
     st.session_state['ai_out']=ai_out
-    st.session_state['st.instruct']=''
-
 
 if 'ai_out' not in st.session_state:
     st.session_state['ai_out']=''
 
 with out:
-    st_ace(value=''+st.session_state['ai_out'],
-                   auto_update=True,
-                   language=select_lang,
-                   key='out_ace')
-    if out_lang !='en':
-        try:
-            st_ace(value=''+ya_translate(st.session_state['ai_out'],target_language=out_lang),
-                   auto_update=True,
-                   language=select_lang)
-        except:
-            st_ace(value=f'Ошибка перевода на {out_lang}',
-                   auto_update=True,
-                   language=select_lang)
-    else:    
-        st_ace(value=''+st.session_state['ai_out'],
-                   auto_update=True,
-                   language=select_lang,
-                   key='out_ace2')
+    tab1, tab2 = st.tabs(["Code", "Markdown"])
+    with tab1:
+        if out_lang !='en':
+            try:
+                st.code(''+ya_translate(st.session_state['ai_out'],target_language=out_lang), language=select_lang)
+            except:
+                st.code(f'Ошибка перевода на {out_lang}', language=select_lang)
+        else:    
+            st.code(''+st.session_state['ai_out'], language=select_lang)
+    with tab2:
+        if out_lang !='en':
+            try:
+                st.markdown(''+ya_translate(st.session_state['ai_out'],target_language=out_lang))
+            except:
+                st.markdown(f'Ошибка перевода на {out_lang}')
+        else:    
+            st.markdown(''+st.session_state['ai_out'])
 
 
 def copy_out(final_out):
     if final_out is not None or final_out !='':
-        st.session_state['st.instruct']=''
         st.session_state['final_out'] = final_out
 
 
 s23.button('<',help='Вставиь ответ ИИ. Можно использовать для итеративного програмиирования',
              on_click=copy_out,args=(st.session_state['ai_out'],))
-
 #st.write(f'Вероятный язык ввода:{guess_lexer(in_text).name}')    
 st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in_text,
-                                                                   instruct,
                                                                    model,
                                                                    temperature,
                                                                    max_tokens,
@@ -178,8 +148,6 @@ st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in
                                                                    presence_penalty,
                                                                    True)) 
 
-
-       
 
 with st.expander('Инструкции по OpenAI', expanded=False):
     with open(app_path+'/help.md','r') as f:
