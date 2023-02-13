@@ -1,7 +1,7 @@
 # ai-play
 streamlit app playground around GPT-3 models
 
-##Run   
+## Run   
 get api_key for openai api and yandex translate api  
 set it into env  
 ORGANIZATION=''   
