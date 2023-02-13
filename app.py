@@ -142,26 +142,6 @@ with out:
                    auto_update=True,
                    language=select_lang,
                    key='out_ace')
-    if out_lang !='en':
-        try:
-            st_ace(value=''+ya_translate(st.session_state['ai_out'],target_language=out_lang),
-                   auto_update=True,
-                   language=select_lang)
-        except:
-            st_ace(value=f'Ошибка перевода на {out_lang}',
-                   auto_update=True,
-                   language=select_lang)
-    else:    
-        st_ace(value=''+st.session_state['ai_out'],
-                   auto_update=True,
-                   language=select_lang,
-                   key='out_ace2')
-
-st.write('output_ace')
-st.write(st.session_state['out_ace'])
-st.write('final')
-if 'final_out' in st.session_state:
-    st.write(st.session_state['final_out'])
 
 
 def copy_out(final_out):
