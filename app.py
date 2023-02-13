@@ -87,17 +87,17 @@ select_lang = s25.selectbox('Язык программирования', ['text'
 inp,out = st.columns([1,1])
 with inp:
     if st.session_state['ext_input'] is not None or st.session_state['ext_input'] !='':
-        in_value = st.session_state['ext_input']
-        in_placeholder = ''
+        in_text = st_ace(value=st.session_state['ext_input'],
+                        placeholder='',
+                        auto_update=True,
+                        language=select_lang,
+                        key='in_ace')
     else:
-        in_value = ''
-        in_placeholder = INPUT_HELP_TEXT
-    st.write(in_value)
-    in_text = st_ace(value=in_value,
-                     placeholder=in_placeholder,
-                     auto_update=True,
-                     language=select_lang,
-                     key='in_ace')
+        in_text = st_ace(value='',
+                        placeholder=INPUT_HELP_TEXT,
+                        auto_update=True,
+                        language=select_lang,
+                        key='in_ace')
     instruct = st.text_input('Инструкции:', help=None, key='st.instruct')
 
 def sent_to_ai(in_text,instruct,model,temperature,max_tokens,top_p,best_of,frequency_penalty,presence_penalty,kep_first):
@@ -139,14 +139,20 @@ if 'ai_out' not in st.session_state:
 with out:
     if out_lang !='en':
         try:
-            out_value = ''+ya_translate(st.session_state['ai_out'],target_language=out_lang)
+            st_ace(value=''+ya_translate(st.session_state['ai_out'],target_language=out_lang),
+                   auto_update=True,
+                   language=select_lang,
+                   key='out_ace')
         except:
-            out_value =f'Ошибка перевода на {out_lang}'
+            st_ace(value=f'Ошибка перевода на {out_lang}',
+                   auto_update=True,
+                   language=select_lang,
+                   key='out_ace')
     else:    
-        out_value =''+st.session_state['ai_out']
-    st.write(out_value)
-    st.write(st.session_state['ai_out'])
-    st.session_state['final_out'] = st_ace(value=out_value, auto_update=True, language=select_lang, key='out_ace')
+        st_ace(value=''+st.session_state['ai_out'],
+                   auto_update=True,
+                   language=select_lang,
+                   key='out_ace')
 
 
 def copy_out(final_out):
@@ -157,6 +163,7 @@ def copy_out(final_out):
 
 s23.button('<',help='Вставиь ответ ИИ. Можно использовать для итеративного програмиирования',
              on_click=copy_out,args=(st.session_state['final_out'],))
+
 #st.write(f'Вероятный язык ввода:{guess_lexer(in_text).name}')    
 st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in_text,
                                                                    instruct,
