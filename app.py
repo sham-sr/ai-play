@@ -90,14 +90,12 @@ with inp:
         in_text = st_ace(value=st.session_state['ext_input'],
                         placeholder='',
                         auto_update=True,
-                        language=select_lang,
-                        key='in_ace')
+                        language=select_lang)
     else:
         in_text = st_ace(value='',
                         placeholder=INPUT_HELP_TEXT,
                         auto_update=True,
-                        language=select_lang,
-                        key='in_ace')
+                        language=select_lang)
     instruct = st.text_input('Инструкции:', help=None, key='st.instruct')
 
 def sent_to_ai(in_text,instruct,model,temperature,max_tokens,top_p,best_of,frequency_penalty,presence_penalty,kep_first):
@@ -141,13 +139,11 @@ with out:
         try:
             st_ace(value=''+ya_translate(st.session_state['ai_out'],target_language=out_lang),
                    auto_update=True,
-                   language=select_lang,
-                   key='out_ace')
+                   language=select_lang)
         except:
             st_ace(value=f'Ошибка перевода на {out_lang}',
                    auto_update=True,
-                   language=select_lang,
-                   key='out_ace')
+                   language=select_lang)
     else:    
         st_ace(value=''+st.session_state['ai_out'],
                    auto_update=True,
