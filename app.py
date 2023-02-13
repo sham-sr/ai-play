@@ -33,6 +33,8 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 def update_state():
     del st.session_state['ext_input']
     del st.session_state['final_out']
+    if 'st.instruct' in st.session_state
+        st.session_state['st.instruct']=''
 
 
 snippets_dict = snippets_dict_get(app_path+'/snippets.txt')
@@ -117,7 +119,7 @@ def sent_to_ai(in_text,instruct,model,temperature,max_tokens,top_p,best_of,frequ
     else:
         ai_out = eng_in_text
     st.session_state['ai_out']=ai_out
-    st.session_state['instruct']=''
+    st.session_state['st.instruct']=''
 
 
 if 'ai_out' not in st.session_state:
@@ -136,6 +138,7 @@ with out:
 
 def copy_out(final_out):
     if final_out is not None or final_out !='':
+        st.session_state['st.instruct']=''
         st.session_state['final_out'] = final_out
 
 
@@ -143,7 +146,7 @@ s23.button('<',help='Вставиь ответ ИИ. Можно использо
              on_click=copy_out,args=(st.session_state['ai_out'],))
 #st.write(f'Вероятный язык ввода:{guess_lexer(in_text).name}')    
 st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in_text,
-                                                                   instruct
+                                                                   instruct,
                                                                    model,
                                                                    temperature,
                                                                    max_tokens,
