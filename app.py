@@ -95,7 +95,7 @@ with inp:
     in_text = st_ace(value=in_value,
                      placeholder=in_placeholder,
                      auto_update=True,
-                     language=select_lang
+                     language=select_lang,
                      key='in_ace')
     instruct = st.text_input('Инструкции:', help=None, key='st.instruct')
 
@@ -144,7 +144,6 @@ with out:
     else:    
         out_value =''+st.session_state['ai_out']
     st_ace(value=out_value, auto_update=True, language=select_lang, key='out_ace')
-
 
 
 def copy_out(final_out):
