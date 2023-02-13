@@ -5,7 +5,7 @@ from streamlit_ace import st_ace
 from pygments.lexers import guess_lexer
 from extra_func import read_up_file, snippets_dict_get
 from openai_func import ai_answers
-from ya_api.py import ya_translate
+from ya_api import ya_translate
 import os
 
 app_path = os.getenv("APP_PATH")
