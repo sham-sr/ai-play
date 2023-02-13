@@ -153,4 +153,6 @@ st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in
 
         
 with st.expander('Инструкции по OpenAI', expanded=False):
-    st.markdown(read_up_file(app_path+'/help.md',ftype='sstring_data'))
+    with open(app_path+'/help.md','r') as f:
+        help_text = f.read()
+    st.markdown(help_text)
