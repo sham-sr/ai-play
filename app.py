@@ -31,10 +31,8 @@ hide_streamlit_style = """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 def update_state():
-    if 'ext_input' in st.session_state:
-        del st.session_state['ext_input']
-    if 'final_out' in st.session_state:
-        del st.session_state['final_out']
+    del st.session_state['ext_input']
+    del st.session_state['final_out']
 
 
 snippets_dict = snippets_dict_get(app_path+'/snippets.txt')
@@ -82,7 +80,7 @@ select_lang = s25.selectbox('Язык программирования', ['text'
     
 inp,out = st.columns([1,1])
 with inp:
-    st.markdown('# ')
+    st.markdown('F5 сбросить всё')
     if st.session_state['ext_input'] is not None: 
         in_text = st_ace(value=st.session_state['ext_input'], auto_update=True, language=select_lang, key='st.st_ace')
     else:
@@ -151,19 +149,10 @@ st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in
 
 
 if s21.button('Clear',help='Очистить все'):
-    with out:
-        tab1.write()
-        tab2.write()
     if 'ai_out' in st.session_state:
         del st.session_state['ai_out']
-    if 'st.snipets' in st.session_state:
-        del st.session_state['st.snipets']
-    if 'st.upload_file' in st.session_state:
-        del st.session_state['st.upload_file']
-    if 'st.max_tokens' in st.session_state:
-        del st.session_state['st.max_tokens']
-    if 'st.p_lang' in st.session_state:
-        del st.session_state['st.p_lang']
+    if 'ext_input' in st.session_state:
+        del st.session_state['ext_input']
     st.experimental_rerun()
         
 
