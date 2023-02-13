@@ -86,14 +86,13 @@ select_lang = s25.selectbox('Язык программирования', ['text'
     
 inp,out = st.columns([1,1])
 with inp:
-    st.write(st.session_state['ext_input'])
-    if st.session_state['ext_input'] is not None:
-        st.write() 
+    if st.session_state['ext_input'] is not None or st.session_state['ext_input'] !='':
         in_value = st.session_state['ext_input']
-        in_placeholder = None
+        in_placeholder = ''
     else:
         in_value = ''
         in_placeholder = INPUT_HELP_TEXT
+    st.write(in_value)
     in_text = st_ace(value=in_value,
                      placeholder=in_placeholder,
                      auto_update=True,
@@ -138,8 +137,6 @@ if 'ai_out' not in st.session_state:
     st.session_state['ai_out']=''
 
 with out:
-    #####
-    st.write(st.session_state['ai_out'])
     if out_lang !='en':
         try:
             out_value = ''+ya_translate(st.session_state['ai_out'],target_language=out_lang)
@@ -147,7 +144,9 @@ with out:
             out_value =f'Ошибка перевода на {out_lang}'
     else:    
         out_value =''+st.session_state['ai_out']
-    st_ace(value=out_value, auto_update=True, language=select_lang, key='out_ace')
+    st.write(out_value)
+    st.write(st.session_state['ai_out'])
+    st.session_state['final_out'] = st_ace(value=out_value, auto_update=True, language=select_lang, key='out_ace')
 
 
 def copy_out(final_out):
@@ -157,7 +156,7 @@ def copy_out(final_out):
 
 
 s23.button('<',help='Вставиь ответ ИИ. Можно использовать для итеративного програмиирования',
-             on_click=copy_out,args=(st.session_state['ai_out'],))
+             on_click=copy_out,args=(st.session_state['final_out'],))
 #st.write(f'Вероятный язык ввода:{guess_lexer(in_text).name}')    
 st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in_text,
                                                                    instruct,
