@@ -140,8 +140,7 @@ if 'ai_out' not in st.session_state:
 with out:
     st_ace(value=''+st.session_state['ai_out'],
                    auto_update=True,
-                   language=select_lang,
-                   key='out_ace')
+                   language=select_lang)
 
 
 def copy_out(final_out):
