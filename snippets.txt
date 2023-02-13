@@ -1,0 +1,37 @@
+<name>Создать функцию python</name>
+<split>#python function that takes a dictionary and returns two lists of keys and values</split>
+
+<name>Обьяснить функцию JavaScript</name>
+<split>// Function 1
+var fullNames = [];
+for (var i = 0; i < 50; i++) {
+  fullNames.push(names[Math.floor(Math.random() * names.length)]
+    + " " + lastNames[Math.floor(Math.random() * lastNames.length)]);
+}
+
+// What does Function 1 do?</split>
+
+<name>Unit тест</name>
+<split># Python 3
+def sum_numbers(a, b):
+  return a + b
+
+# Unit test
+def</split>
+
+<name>Создать SQL запрос</name>
+<split>"""
+Table customers, columns = [CustomerId, FirstName, LastName, Company, Address, City, State, Country, PostalCode, Phone, Fax, Email, SupportRepId]
+Create a MySQL query for all customers in Texas named Jane
+"""
+query =</split>
+
+<name>Обьяснить SQL запрос</name>
+<split>SELECT DISTINCT department.name
+FROM department
+JOIN employee ON department.id = employee.department_id
+JOIN salary_payments ON employee.id = salary_payments.employee_id
+WHERE salary_payments.date BETWEEN '2020-06-01' AND '2020-06-30'
+GROUP BY department.name
+HAVING COUNT(employee.id) > 10;
+-- Explanation of the above query in human readable format:</split>
