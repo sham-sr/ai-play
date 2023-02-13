@@ -73,6 +73,7 @@ with st.sidebar:
 
 s21,s22,s23,s24,s25 = st.columns([.5,3.1,.4,2,2])
 s21.markdown('## ')
+s21.markdown('*F5* сбросить всё')
 
 s23.markdown('## ')
 out_lang = s24.radio('Язык вывода', ['en','ru'], horizontal=True, key ='st.p_lang')
@@ -80,7 +81,7 @@ select_lang = s25.selectbox('Язык программирования', ['text'
     
 inp,out = st.columns([1,1])
 with inp:
-    st.markdown('F5 сбросить всё')
+    st.markdown('## ')
     if st.session_state['ext_input'] is not None: 
         in_text = st_ace(value=st.session_state['ext_input'], auto_update=True, language=select_lang)
     else:
@@ -148,14 +149,7 @@ st.button('Отправить ИИ', type='primary',on_click=sent_to_ai,args=(in
                                                                    True)) 
 
 
-if s21.button('Clear',help='Очистить все'):
-    if 'ai_out' in st.session_state:
-        del st.session_state['final_out']
-    if 'final_out' in st.session_state:
-        del st.session_state['final_out']
-    if 'ext_input' in st.session_state:
-        del st.session_state['ext_input']
-        
+       
 
 with st.expander('Инструкции по OpenAI', expanded=False):
     with open(app_path+'/help.md','r') as f:
