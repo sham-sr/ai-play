@@ -86,7 +86,9 @@ select_lang = s25.selectbox('Язык программирования', ['text'
     
 inp,out = st.columns([1,1])
 with inp:
-    if st.session_state['ext_input'] is not None: 
+    st.wtite(st.session_state['ext_input'])
+    if st.session_state['ext_input'] is not None:
+        st.write() 
         in_value = st.session_state['ext_input']
         in_placeholder = None
     else:
@@ -136,6 +138,8 @@ if 'ai_out' not in st.session_state:
     st.session_state['ai_out']=''
 
 with out:
+    #####
+    st.write(st.session_state['ai_out'])
     if out_lang !='en':
         try:
             out_value = ''+ya_translate(st.session_state['ai_out'],target_language=out_lang)
