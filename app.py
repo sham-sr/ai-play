@@ -192,7 +192,9 @@ with out:
                 st.code(
                     ""
                     + ya_translate(
-                        st.session_state["ai_out"], target_language=out_lang
+                        st.session_state["ai_out"], 
+                        sourceLanguageCode='',
+                        target_language=out_lang
                     ),
                     language=select_lang,
                 )
