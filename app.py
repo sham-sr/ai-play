@@ -207,7 +207,9 @@ with out:
             try:
                 st.markdown(
                     ""
-                    + ya_translate(st.session_state["ai_out"], target_language=out_lang)
+                    + ya_translate(st.session_state["ai_out"],
+                    sourceLanguageCode='',
+                    target_language=out_lang)
                 )
             except:
                 st.markdown(f"Ошибка перевода на {out_lang}")
