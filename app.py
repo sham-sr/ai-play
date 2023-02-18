@@ -181,7 +181,7 @@ def sent_to_ai(
     st.session_state["ai_out"] = ai_out
     try:
         st.session_state["ai_out_ru"] = ya_translate(
-            ai_out, sourceLanguageCode="ru", target_language="en"
+            ai_out, sourceLanguageCode="", target_language="en"
         )
     except:
         st.session_state["ai_out_ru"] = "Ошибка перевода на RU"
