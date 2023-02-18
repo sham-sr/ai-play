@@ -189,6 +189,8 @@ def sent_to_ai(
 
 if "ai_out" not in st.session_state:
     st.session_state["ai_out"] = ""
+if "ai_out_ru" not in st.session_state:
+    st.session_state["ai_out_ru"] = ""
 
 with out:
     tab1, tab2 = st.tabs(["Code", "Markdown"])
