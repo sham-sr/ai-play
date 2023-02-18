@@ -179,6 +179,12 @@ def sent_to_ai(
     except:
         ai_out = "Ошибка ответа AI"
     st.session_state["ai_out"] = ai_out
+    try:
+        st.session_state["ai_out_ru"] = ya_translate(
+            ai_out, sourceLanguageCode="ru", target_language="en"
+        )
+    except:
+        st.session_state["ai_out_ru"] = "Ошибка перевода на RU"
 
 
 if "ai_out" not in st.session_state:
@@ -188,31 +194,12 @@ with out:
     tab1, tab2 = st.tabs(["Code", "Markdown"])
     with tab1:
         if out_lang != "en":
-            try:
-                st.code(
-                    ""
-                    + ya_translate(
-                        st.session_state["ai_out"], 
-                        sourceLanguageCode='',
-                        target_language=out_lang
-                    ),
-                    language=select_lang,
-                )
-            except:
-                st.code(f"Ошибка перевода на {out_lang}", language=select_lang)
+            st.code("" + st.session_state["ai_out_ru"], language=select_lang)
         else:
             st.code("" + st.session_state["ai_out"], language=select_lang)
     with tab2:
         if out_lang != "en":
-            try:
-                st.markdown(
-                    ""
-                    + ya_translate(st.session_state["ai_out"],
-                    sourceLanguageCode='',
-                    target_language=out_lang)
-                )
-            except:
-                st.markdown(f"Ошибка перевода на {out_lang}")
+            st.markdown("" + st.session_state["ai_out_ru"])
         else:
             st.markdown("" + st.session_state["ai_out"])
 
